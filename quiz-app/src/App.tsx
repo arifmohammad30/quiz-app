@@ -24,6 +24,12 @@ const App: React.FC = () => {
 
   // Get the questions based on selected subject
   const getQuestions = (): Question[] => {
+    if (!selectedSubject && subjects.length > 0) {
+      // Set a default subject if none is selected
+      setSelectedSubject(subjects[0].id);
+      return subjects[0].questions;
+    }
+    
     const subject = subjects.find(s => s.id === selectedSubject);
     return subject ? subject.questions : subjects[0].questions;
   };
@@ -105,10 +111,6 @@ const App: React.FC = () => {
 
   const handleRetry = () => {
     resetQuiz();
-    setAppState('subject-selection');
-  };
-
-  const handleNewQuiz = () => {
     setAppState('subject-selection');
   };
 
@@ -212,7 +214,10 @@ const App: React.FC = () => {
             
             <div className="action-buttons">
               <button className="retry-button" onClick={handleRetry}>Try Another Subject</button>
-              <button className="new-quiz-button" onClick={() => resetQuiz()}>Retry This Quiz</button>
+              <button className="new-quiz-button" onClick={() => {
+                resetQuiz();
+                setAppState('quiz');
+              }}>Retry This Quiz</button>
             </div>
           </div>
         );
