@@ -40,8 +40,10 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
             className={`option-button ${selectedOption === opt ? 'selected' : ''}`}
             onClick={() => handleOptionClick(opt)}
             disabled={selectedOption !== null}
+            aria-label={`Option ${String.fromCharCode(65 + idx)}: ${opt}`}
           >
-            <span className="option-letter">{String.fromCharCode(65 + idx)}.</span> {opt}
+            <span className="option-letter">{String.fromCharCode(65 + idx)}</span>
+            <span className="option-text">{opt}</span>
           </button>
         ))}
       </div>
