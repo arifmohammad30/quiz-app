@@ -1,35 +1,47 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from 'react';
+import QuestionCard from './components/QuestionCard';
+import questions from './data/questions';
 
-function App() {
-  const [count, setCount] = useState(0)
+const App: React.FC = () => {
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [score, setScore] = useState<number>(0);
+  const [showScore, setShowScore] = useState<boolean>(false);
+
+  const handleAnswerSelect = (selectedOption: string) => {
+    if (selectedOption === questions[currentIndex].answer) {
+      setScore(score + 1);
+    }
+
+    const nextIndex = currentIndex + 1;
+    if (nextIndex < questions.length) {
+      setCurrentIndex(nextIndex);
+    } else {
+      setShowScore(true);
+    }
+  };
+
+  const handleRetry = () => {
+    setScore(0);
+    setCurrentIndex(0);
+    setShowScore(false);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="app-container" style={{ maxWidth: 600, margin: 'auto', textAlign: 'center' }}>
+      {!showScore ? (
+        <QuestionCard
+          question={questions[currentIndex].question}
+          options={questions[currentIndex].options}
+          onAnswerSelect={handleAnswerSelect}
+        />
+      ) : (
+        <div>
+          <h2>Your Score: {score} / {questions.length}</h2>
+          <button onClick={handleRetry}>Retry Quiz</button>
+        </div>
+      )}
+    </div>
+  );
+};
 
-export default App
+export default App;
